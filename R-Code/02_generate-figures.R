@@ -2,8 +2,8 @@
 #Read in data that is importance values of canopy species by plantation species
 canopy_IV = read.table("Canopy_Species_IV.csv", header = T, sep = ",", stringsAsFactors = T)
 
-png("Canopy_SPecies_Stacked.png", width = 50, height = 50, units = "cm", res = 1000, pointsize = 26)
-par(mar = c(4,6,1,3))
+png("Canopy_Species_Stacked.png", width = 50, height = 50, units = "cm", res = 1000, pointsize = 26)
+par(mar = c(4,7,1,3), font.axis = 4)
 
 barplot(as.matrix(canopy_IV),
         las=2,cex.names=.8, axes = T, horiz=T, xlab = "Species Importance Value", ylab = "",
