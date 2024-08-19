@@ -4,6 +4,7 @@ library(lmerTest)
 library(performance)
 library(tidyverse)
 library(dendextend)
+library(indicspecies)
 #----------------------------------
 #organise the data
 
@@ -119,6 +120,15 @@ dend <- dend %>%
 
 #Finding out which plot belongs to which cluster
 dendgroups <- cutree(dend, k =5)
+
+#---------------------------------------------------------------------------------------------
+#Inidcator species analysis
+
+#Using the groups from the cluster analysis above we can determine which species can be used as indicators for the groups
+
+indval <- multipatt(IV_t, dendgroups, control = how(nperm = 999))
+#Show the summary of indicator species by group with the 'A' and 'B' components
+summary(indval, indvalcomp = TRUE)
 
 #---------------------------------------------------------------------------------------------
 #Generalised linear mixed effects models
