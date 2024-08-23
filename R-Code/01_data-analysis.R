@@ -90,8 +90,28 @@ perm_site
 #read in a dataframe where each row is a plot, and each column a different environmental variable
 env.vars = read.csv("Plot_Environmental_Data.csv", header = T)
 
-#Now to fit the vectors. I want to split them into environmental and vegetation attributes
-#Just environmental variables
+#Calculating Northness and Eastness
+#Northness calculation function
+Nness = function(asp.n){
+  ness = cos(asp.n * pi/180)
+  return(ness)
+}
+#Adding northness to the environmental variable dataframe
+env.vars <- env.vars %>%
+  mutate(Northness = Nness(env.vars$Aspect))
+
+#Eastness calculation function
+Eness = function(asp.e){
+  eess = sin(asp.e * pi / 180)
+  return(eess)
+}
+
+#Adding eastness to environmental variable dataframe
+env.vars <- env.vars %>%
+  mutate(Eastness = Eness(env.vars$Aspect))
+
+#Now to fit the vectors. I want to split them into environmental and vegetation attributes- Note that only significant variables are included in these
+#Just environmental variables 
 SV.envfit <- envfit(nmds ~ Elevation+Distance.Seed.Source+Slope, env.vars)
 SV.envfit
 
