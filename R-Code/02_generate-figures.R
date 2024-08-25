@@ -21,8 +21,8 @@ dev.off()
 #------------------------------------------------------------------------------------------
 #Code for FIGURE3
 #Boxplots for environmental characteristics between overstorey species
-png("boxplots.png", width = 25, height = 25, units = "cm", res = 600, pointsize = 18)
-par(mfrow = c(3,1), mar = c(3,6,3,1))
+png("boxplots.png", width = 30, height = 40, units = "cm", res = 800, pointsize = 18)
+par(mfrow = c(5,1), mar = c(3,6,4,1))
 
 boxplot(env.vars$Elevation ~ env.vars$Species, xlab = "", ylab = "Elevation (m)", col = "white",
         main = '***', horizontal = TRUE)
@@ -35,6 +35,14 @@ mtext("(b)", side = 2, at = par('usr')[4], line = 5, las = 1, cex = par('cex'))
 boxplot(env.vars$Distance.Seed.Source ~ env.vars$Species, xlab = "", ylab = "Distance to Seed Source (m)", col = "white",
         main = '**', horizontal = TRUE)
 mtext("(c)", side = 2, at = par('usr')[4], line = 5, las = 1, cex = par('cex'))
+
+boxplot(env.vars$Northness ~ env.vars$Species, xlab = "", ylab = "Northness", col = "white",
+        main = '', horizontal = TRUE)
+mtext("(d)", side = 2, at = par('usr')[4], line = 5, las = 1, cex = par('cex'))
+
+boxplot(env.vars$Eastness ~ env.vars$Species, xlab = "", ylab = "Eastness", col = "white",
+        main = '', horizontal = TRUE)
+mtext("(e)", side = 2, at = par('usr')[4], line = 5, las = 1, cex = par('cex'))
 
 dev.off()
 
