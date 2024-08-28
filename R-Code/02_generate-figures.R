@@ -50,7 +50,7 @@ dev.off()
 #----------------------------------------------------------------------------------------
 #Code for FIGURE4
   
-png("Ordinations_Polygons.png", width = 45, height = 50, units = "cm", res = 1200, pointsize = 26)
+png("Ordinations_Polygons.png", width = 37, height = 42, units = "cm", res = 800, pointsize = 24)
 par(mfrow = c(3,2), mar = c(4,5,5.5,1.5))
 
 #Simple ordination with colour and shapes differing by plantation species
