@@ -5,6 +5,7 @@ library(performance)
 library(tidyverse)
 library(dendextend)
 library(indicspecies)
+library(data.table)
 #----------------------------------
 #organise the data
 
@@ -84,7 +85,7 @@ perm_sp
 perm_site <- adonis2(dist ~ site)
 perm_site
 
-#--------------------------------------------------
+#-----------------------------------------------------------------------------------------------------
 #Fitting environmental vectors onto the ordination
 
 #read in a dataframe where each row is a plot, and each column a different environmental variable
@@ -125,18 +126,22 @@ env.codes = read.csv("Plot_Environmental_Data_Codes.csv", header = T)
 ALL.envfit <- envfit(nmds ~ E + DS + SL + BA + S + A + TI + NI + EI + SR, env.codes)
 
 
-#---------------------------------
+#--------------------------------------------------------------------------------------------------
 #Hierarchical cluster analysis
 
 #use the same dissimilarity matrix as we used in the PERMDISP and PERMANOVA to do the cluster analysis
 clust = hclust(dist, method = "complete")
 #Making the cluster into a dendrogram
 dend <- as.dendrogram(clust)
+
 #Set some parameters for the dendrogram plot
-dend <- dend %>%
-  set("branches_lwd", 2.8) %>%
-  set("labels_col", "black") %>%
-  set("branches_k_color", value = c("#c51b7d", "#e9a3c9", "#f1a340", "#7fbf7b", "#1b7837"), k =5)
+#Colour the branches
+cols_branches <- c("#c51b7d", "#e9a3c9", "#f1a340", "#7fbf7b", "#1b7837")
+dend <- colour_branches(dend, k = 5, col = cols_branches)
+#blank out the labels
+labels_colors(dend) <- "white"
+#Set the line width
+dend <- assign_values_to_branches_edgePar(dend = dend, value = 2.5, edgePar = "lwd")
 
 #Finding out which plot belongs to which cluster
 dendgroups <- cutree(dend, k =5)
@@ -147,8 +152,15 @@ dendgroups <- cutree(dend, k =5)
 #Using the groups from the cluster analysis above we can determine which species can be used as indicators for the groups
 
 indval <- multipatt(IV_t, dendgroups, control = how(nperm = 999))
-#Show the summary of indicator species by group with the 'A' and 'B' components
-summary(indval, indvalcomp = TRUE)
+#Show the summary of indicator species by group
+#Groups correspond to Clusters as A = 4, B = 5, C = 3, D = 1, E = 2
+summary(indval)
+
+#Now we must do a correction on the p values to avoid a Type 1 error
+#We used the method "hommel" 
+indval.adjusted <- as.data.table(indval$sign, keep.rownames = TRUE)
+indval.adjusted[ ,p.value.h:=p.adjust(p.value, method = "hommel", n = 62)]
+indval.adjusted[p.value.h<=0.05]
 
 #---------------------------------------------------------------------------------------------
 #Generalised linear mixed effects models
